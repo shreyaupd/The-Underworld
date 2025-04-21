@@ -11,7 +11,7 @@ const Hero = () => {
   const videoRef3 = useRef(null);
   const containerRef = useRef(null);
 
-  const [currentVideo, setCurrentVideo] = useState(1);
+  const [currentVideo, setCurrentVideo] = useState(1); 
   const isInView = useInView(containerRef, { once: false, amount: 0.2 });
   const texts = [
     "Welcome To The Underworld",
@@ -34,7 +34,7 @@ const Hero = () => {
       animate: { opacity: 1, transform: "rotateY(0deg)" },
     },
   ];
-
+  const currentAnimation = animationVariants[currentVideo - 1];
   useEffect(() => {
     if (!isInView) return;
 
@@ -68,11 +68,8 @@ const Hero = () => {
     }
   };
 
-  const handleAnimationComplete = () => {
-    console.log("All letters have animated!");
-  };
 
-  const currentAnimation = animationVariants[currentVideo - 1];
+  
 
   return (
     <motion.div
@@ -128,7 +125,6 @@ const Hero = () => {
           easing="easeOutCubic"
           threshold={0.2}
           rootMargin="-50px"
-          onLetterAnimationComplete={handleAnimationComplete}
         />
         <motion.div
           className="text-white tracking-widest text-sm mt-4 font-semibold"
