@@ -74,8 +74,7 @@ const Hero = () => {
   return (
     <motion.div
       ref={containerRef}
-      className="relative w-full h-[720px] overflow-hidden -mt-4"
-    >
+       className="relative w-full h-[720px] overflow-hidden -mt-20 z-10">
       <motion.video
         ref={videoRef1}
         src={underwater}
