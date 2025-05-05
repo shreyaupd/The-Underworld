@@ -1,13 +1,24 @@
-import React from 'react';
+import React,{useState,useEffect} from 'react';
 import logo1 from '../images/logo1.png';
 import { RxHamburgerMenu, RxCross1 } from "react-icons/rx";
 
 const Navbar = () => {
-  const [MenuOpen, setMenuOpen] = React.useState(false);
+  const [MenuOpen, setMenuOpen] = useState(false);
+  const [isScrolled,setIsScrolled] = useState(false);
   const toggle = () => setMenuOpen(!MenuOpen);
+  useEffect(()=>{
+    const handelScroll=()=>{
+      const offset = window.scrollY 
+      if(offset > 720){
+        setIsScrolled(true)
+      }
+    }
+    window.addEventListener('scroll',handelScroll) //“Tell the window object (aka the whole browser tab) to watch for when it gets scrolled. When that happens, run handleScroll.”
+    return () => window.removeEventListener('scroll',handelScroll)          
+  },[])
   
   return (
-    <div className='Navbar sticky top-0 z-50 w-full h-20 bg-white/1 border-none flex justify-between items-center sm:px-8 px-4'>
+    <div className={`Navbar sticky top-0 z-50 w-full h-20 border-none flex justify-between items-center sm:px-8 px-4 ${isScrolled? ' bg-cyan-800 shadow-md' : 'bg-transparent'}`}>
       {/* Logo */}
       <div className="logo flex items-center ml-[10px] sm:ml-10">
         <img src={logo1} className='w-[70px] h-[55px] cursor-pointer' alt="Logo" />

@@ -111,7 +111,7 @@ const Hero = () => {
         className="absolute top-0 left-0 w-full h-full object-cover"
       />
 
-      <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-blue-600 to-blue-900 opacity-40"></div>
+      <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-cyan-950/90 via-cyan-600/50 to-blue-200 opacity-40"></div>
 
       <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center flex-col">
         <SplitText
