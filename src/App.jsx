@@ -1,13 +1,23 @@
 import { useState } from 'react'
 import Home from './pages/Home'
+import Loading from './components/Loading'
+
 function App() {
-  const [count, setCount] = useState(0)
+  const [showLoading, setShowLoading] = useState(true)
 
   return (
     <>
-      <Home/>
+      {showLoading ? (
+        <Loading onComplete={() => setShowLoading(false)} />
+      ) : (
+        <Home />
+      )}
     </>
   )
 }
 
 export default App
+
+
+
+

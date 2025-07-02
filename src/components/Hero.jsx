@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useState } from "react";
 import { motion, useInView } from "framer-motion";
+import gsap from "gsap";
 import underwater from "../videos/underwater.mp4";
 import people from "../videos/people.mp4";
 import people2 from "../videos/people2.mp4";
@@ -11,8 +12,12 @@ const Hero = () => {
   const videoRef3 = useRef(null);
   const containerRef = useRef(null);
 
-  const [currentVideo, setCurrentVideo] = useState(1); 
+  const topShutterRef = useRef(null);
+  const bottomShutterRef = useRef(null);
+
+  const [currentVideo, setCurrentVideo] = useState(1);
   const isInView = useInView(containerRef, { once: false, amount: 0.2 });
+
   const texts = [
     "Welcome To The Underworld",
     "Discover What Lies Beneath",
@@ -35,6 +40,7 @@ const Hero = () => {
     },
   ];
   const currentAnimation = animationVariants[currentVideo - 1];
+
   useEffect(() => {
     if (!isInView) return;
 
@@ -54,7 +60,7 @@ const Hero = () => {
   }, [isInView, currentVideo]);
 
   const handleVideoEnd = () => {
-    let nextVideo = currentVideo === 1 ? 2 : currentVideo === 2 ? 3 : 1;
+    const nextVideo = currentVideo === 1 ? 2 : currentVideo === 2 ? 3 : 1;
     setCurrentVideo(nextVideo);
 
     const nextRef =
@@ -68,73 +74,111 @@ const Hero = () => {
     }
   };
 
-
-  
+  // Animate shutters using GSAP
+  useEffect(() => {
+    const tl = gsap.timeline({ delay: 0.3 });
+    tl.to(topShutterRef.current, {
+      y: "-100%",
+      duration: 1.2,
+      ease: "power2.inOut",
+    })
+      .to(
+        bottomShutterRef.current,
+        {
+          y: "100%",
+          duration: 1.2,
+          ease: "power2.inOut",
+        },
+        "<" // Start at same time as top
+      )
+      .to(
+        [topShutterRef.current, bottomShutterRef.current],
+        {
+          display: "none",
+        },
+        "-=0.2"
+      );
+  }, []);
 
   return (
-    <motion.div
-      ref={containerRef}
-       className="relative w-full h-[720px] overflow-hidden -mt-20 z-10">
-      <motion.video
-        ref={videoRef1}
-        src={underwater}
-        muted
-        playsInline
-        onEnded={handleVideoEnd}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: currentVideo === 1 ? 1 : 0 }}
-        transition={{ duration: 0.7, ease: "easeInOut" }}
-        className="absolute top-0 left-0 w-full h-full object-cover"
-      />
-
-      <motion.video
-        ref={videoRef2}
-        src={people}
-        muted
-        playsInline
-        onEnded={handleVideoEnd}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: currentVideo === 2 ? 1 : 0 }}
-        transition={{ duration: 0.6, ease: "easeInOut" }}
-        className="absolute top-0 left-0 w-full h-full object-cover"
-      />
-
-      <motion.video
-        ref={videoRef3}
-        src={people2}
-        muted
-        playsInline
-        onEnded={handleVideoEnd}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: currentVideo === 3 ? 1 : 0 }}
-        transition={{ duration: 0.6, ease: "easeInOut" }}
-        className="absolute top-0 left-0 w-full h-full object-cover"
-      />
-
-      <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-cyan-950/90 via-cyan-600/50 to-blue-200 opacity-40"></div>
-
-      <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center flex-col">
-        <SplitText
-          key={currentText}
-          text={currentText}
-          className="relative text-[60px] font-bold text-blue-100 text-center drop-shadow-lg"
-          delay={150}
-          animationFrom={currentAnimation.initial}
-          animationTo={currentAnimation.animate}
-          easing="easeOutCubic"
-          threshold={0.2}
-          rootMargin="-50px"
+    <>
+      {/* Hero section */}
+      <motion.div
+        ref={containerRef}
+        className="relative w-full h-[720px] overflow-hidden -mt-20 z-10"
+      >
+        {/* Videos */}
+        <motion.video
+          ref={videoRef1}
+          src={underwater}
+          muted
+          playsInline
+          onEnded={handleVideoEnd}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: currentVideo === 1 ? 1 : 0 }}
+          transition={{ duration: 0.7, ease: "easeInOut" }}
+          className="absolute top-0 left-0 w-full h-full object-cover"
         />
-        <motion.div
-          className="text-white tracking-widest text-sm mt-4 font-semibold"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.5 }}
-        >
-          DIVE DEEPER TO EXPLORE
-        </motion.div>
-      </div>
-    </motion.div>
+        <motion.video
+          ref={videoRef2}
+          src={people}
+          muted
+          playsInline
+          onEnded={handleVideoEnd}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: currentVideo === 2 ? 1 : 0 }}
+          transition={{ duration: 0.6, ease: "easeInOut" }}
+          className="absolute top-0 left-0 w-full h-full object-cover"
+        />
+        <motion.video
+          ref={videoRef3}
+          src={people2}
+          muted
+          playsInline
+          onEnded={handleVideoEnd}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: currentVideo === 3 ? 1 : 0 }}
+          transition={{ duration: 0.6, ease: "easeInOut" }}
+          className="absolute top-0 left-0 w-full h-full object-cover"
+        />
+
+        {/* Overlay */}
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-cyan-950/90 via-cyan-600/50 to-blue-200 opacity-40"></div>
+
+        {/* Text */}
+        <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center flex-col">
+          <SplitText
+            key={currentText}
+            text={currentText}
+            className="relative text-[60px] font-bold text-blue-100 text-center drop-shadow-lg"
+            delay={150}
+            animationFrom={currentAnimation.initial}
+            animationTo={currentAnimation.animate}
+            easing="easeOutCubic"
+            threshold={0.2}
+            rootMargin="-50px"
+          />
+          <motion.div
+            className="text-white tracking-widest text-sm mt-4 font-semibold"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.5 }}
+          >
+            DIVE DEEPER TO EXPLORE
+          </motion.div>
+        </div>
+      </motion.div>
+
+      {/* Shutters (after Hero so they layer on top) */}
+      <div
+        ref={topShutterRef}
+        className="fixed top-0 left-0 w-full h-1/2 bg-cyan-300 z-[9999]"
+      />
+      <div
+        ref={bottomShutterRef}
+        className="fixed bottom-0 left-0 w-full h-1/2 bg-cyan-300 z-[9999]"
+      />
+    </>
   );
 };
 
