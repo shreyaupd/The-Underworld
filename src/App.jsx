@@ -7,11 +7,11 @@ function App() {
 
   return (
     <>
-      {showLoading ? (
+      {/* {showLoading ? (
         <Loading onComplete={() => setShowLoading(false)} />
-      ) : (
+      ) : ( */}
         <Home />
-      )}
+      {/* )} */}
     </>
   )
 }
