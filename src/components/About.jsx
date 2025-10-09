@@ -19,7 +19,7 @@ const About = () => {
 
   // Add ref to the array
   const addToRefs = (el) => {
-    if (el && !cardRefs.current.includes(el)) {
+    if (el && !cardRefs.current.includes(el)) { // Only add if it's not already in the array
       cardRefs.current.push(el);
     }
   };
@@ -30,9 +30,8 @@ const About = () => {
       const masterTl = gsap.timeline({
         scrollTrigger: {
           trigger: aboutRef.current,
-          markers: true, // Set to false when done testing
           start: "top 70%",
-          end: "bottom 20%",
+          end: "bottom 10%",
           toggleActions: "play none none reverse",
           scrub: 1
         }
@@ -58,45 +57,29 @@ const About = () => {
         .from(descRef.current, {
           opacity: 0,
           x: -60,
-          duration: 0.8,
+          duration: 0.3,
           ease: "power2.out",
-        }, "-=0.5");
+        }, "-=0.9");
 
       // SECTION 2: Card animations (start after text animations complete)
       // Card 1: Slide up with bounce
-      masterTl.from(cardRefs.current[0], {
+       gsap.from(cardRefs.current,{
+        y: 100,
         opacity: 0,
-        y: -350,
-        duration: 1.2,
+        duration: 4,
+        stagger:0.5,
+        delay:4,
+        scale: (i)=> 1+i*0.1,
         ease: "bounce.out",
-      }, "+=0.3") // Wait 0.3s after text animations
-
-      // Card 2: Slide from right with scale
-      .from(cardRefs.current[1], {
-        opacity: 0,
-        x: 100,
-        scale: 0.8,
-        duration: 1,
-        ease: "back.out(1.7)",
-      }, "-=0.7") // Start 0.7s before previous card ends
-
-      // Card 3: Rotate in from left
-      .from(cardRefs.current[2], {
-        opacity: 0,
-        x: -100,
-        rotationY: 90,
-        duration: 1,
-        ease: "power3.out",
-      }, "-=0.6") // Start 0.6s before previous card ends
-
-      // Card 4: Scale up from center
-      .from(cardRefs.current[3], {
-        opacity: 0,
-        scale: 0,
-        rotation: 180,
-        duration: 1.2,
-        ease: "elastic.out(1, 0.8)",
-      }, "-=0.5"); // Start 0.5s before previous card ends
+        scrollTrigger: {
+          trigger: aboutRef.current,
+          start: "top 40%",
+          end: "bottom 90%",
+            markers: true,
+          toggleActions: "play none none reverse",
+          scrub: 1 
+        }
+       })
 
     }, aboutRef);
     

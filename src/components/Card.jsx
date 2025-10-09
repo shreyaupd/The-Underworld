@@ -4,40 +4,37 @@ import { gsap } from 'gsap';
 const Card = ({ imageSrc, placeholderText, hoverContent, className }) => {
   const cardRef = useRef(null);
   const contentRef = useRef(null);
-  
+
   useEffect(() => {
     const card = cardRef.current;
     const content = contentRef.current;
-    
+
     if (!card || !content) return;
-    
-    // Initial setup - hide content
+
+    // Hide hover content initially
     gsap.set(content, { opacity: 0, y: 20 });
-    
-    // Define event handlers
+
     const handleMouseEnter = () => {
-      gsap.to(content, { 
-        opacity: 1, 
-        y: 0, 
+      gsap.to(content, {
+        opacity: 1,
+        y: 0,
         duration: 0.3,
-        ease: 'power2.out'
+        ease: 'power2.out',
       });
     };
-    
+
     const handleMouseLeave = () => {
-      gsap.to(content, { 
-        opacity: 0, 
-        y: 20, 
+      gsap.to(content, {
+        opacity: 0,
+        y: 20,
         duration: 0.3,
-        ease: 'power2.in'
+        ease: 'power2.in',
       });
     };
-    
-    // Add event listeners
+
     card.addEventListener('mouseenter', handleMouseEnter);
     card.addEventListener('mouseleave', handleMouseLeave);
-    
-    // Cleanup function
+
     return () => {
       card.removeEventListener('mouseenter', handleMouseEnter);
       card.removeEventListener('mouseleave', handleMouseLeave);
@@ -45,26 +42,26 @@ const Card = ({ imageSrc, placeholderText, hoverContent, className }) => {
   }, []);
 
   return (
-    <div 
+    <div
       ref={cardRef}
-      className={`relative overflow-hidden rounded-xl shadow-lg cursor-pointer group ${className}`}
+      className={`relative overflow-hidden rounded-xl shadow-lg cursor-pointer group z-0 ${className}`}
     >
       {/* Background Image */}
-      <img 
-        src={imageSrc} 
-        alt={placeholderText} 
-        className="absolute inset-0 w-full h-full object-cover"
+      <img
+        src={imageSrc}
+        alt={placeholderText}
+        className="absolute inset-0 w-full h-full object-cover pointer-events-none"
       />
-      
-      {/* Placeholder Text (always visible) */}
-      <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-70 text-white p-4">
+
+      {/* Placeholder Text */}
+      <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-70 text-white p-4 z-5">
         <h3 className="text-lg font-semibold">{placeholderText}</h3>
       </div>
-      
-      {/* Hover Content (hidden by default) */}
-      <div 
+
+      {/* Hover Content */}
+      <div
         ref={contentRef}
-        className="absolute inset-0 bg-black bg-opacity-80 text-white p-6 flex flex-col justify-center items-center"
+        className="absolute inset-0 bg-black bg-opacity-80 text-white p-6 flex flex-col justify-center items-center z-10"
       >
         {hoverContent}
       </div>
