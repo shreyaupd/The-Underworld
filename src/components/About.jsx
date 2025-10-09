@@ -17,43 +17,37 @@ const About = () => {
   const descRef = useRef(null);
   const cardRefs = useRef([]);
 
-  // Add ref to the array
   const addToRefs = (el) => {
-    if (el && !cardRefs.current.includes(el)) { // Only add if it's not already in the array
-      cardRefs.current.push(el);
-    }
+    if (el && !cardRefs.current.includes(el)) cardRefs.current.push(el);
   };
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Create a master timeline for the entire section
-      const masterTl = gsap.timeline({
+
+      // Master timeline for text
+      const textTl = gsap.timeline({
         scrollTrigger: {
           trigger: aboutRef.current,
-          start: "top 70%",
-          end: "bottom 10%",
-          toggleActions: "play none none reverse",
-          scrub: 1
+          start: "top 90%",
+          end: "bottom 0%",
+          scrub: 1,
+          markers: true
         }
       });
 
-      // SECTION 1: Text animations (About label, title, description)
-      masterTl
-        // About label animation
+      textTl
         .from(aboutLabelRef.current, {
           opacity: 0,
           x: -100,
           duration: 1.2,
           ease: "power3.out",
         })
-        // Title animation (starts 0.3s after previous ends)
         .from(titleRef.current, {
           opacity: 0,
           x: -80,
           duration: 1,
           ease: "power2.out",
-        }, "-=0.8") // Overlap by 0.8 seconds
-        // Description animation
+        }, "-=0.8")
         .from(descRef.current, {
           opacity: 0,
           x: -60,
@@ -61,47 +55,73 @@ const About = () => {
           ease: "power2.out",
         }, "-=0.9");
 
-      // SECTION 2: Card animations (start after text animations complete)
-      // Card 1: Slide up with bounce
-       gsap.from(cardRefs.current,{
-        y: 100,
-        opacity: 0,
-        duration: 4,
-        stagger:0.5,
-        delay:4,
-        scale: (i)=> 1+i*0.1,
-        ease: "bounce.out",
-        scrollTrigger: {
-          trigger: aboutRef.current,
-          start: "top 40%",
-          end: "bottom 90%",
-            markers: true,
-          toggleActions: "play none none reverse",
-          scrub: 1 
+      //except last card
+      cardRefs.current.slice(0, 3).forEach((card, i) => {
+        gsap.fromTo(
+          card,
+          {
+            y: 100,
+            opacity: 0,
+            scale: 0.9,
+            z: 10 + i,
+          },
+          {
+            y: 0,
+            opacity: 1,
+            scale: 1,
+            z: 0,
+            x: 100,
+            duration: 5,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: card,
+              start: "top 80%",
+              end: "top 30%",
+              scrub: 1,
+            }
+          }
+        );
+      });
+
+      // Animate the last card (expanding)
+      gsap.fromTo(cardRefs.current[3],
+        { y: 0, scale: 0.9, opacity: 0, z: 0 },
+        {
+          y: -300,
+          x: -100,
+          scale: 1.3,
+          opacity: 1,
+          z: -10, 
+          duration: 2,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: cardRefs.current[3],
+            start: "top 80%",
+            end: "top 30%",
+            scrub: 1,
+          }
         }
-       })
+      );
 
     }, aboutRef);
-    
+
     return () => ctx.revert();
   }, []);
 
   return (
-    <div 
-      ref={aboutRef}
+    <div
       id="about-section"
       className="w-full relative z-0 min-h-screen bg-gradient-to-b from-cyan-950/90 via-cyan-600/50 to-blue-200 px-6 py-16"
     >
-      <div className="max-w-6xl min-h-[800px] mt-20 bg-[#061A3A] rounded-3xl px-10 py-12 text-white">
-        {/* About label */}
+      <div ref={aboutRef} className="max-w-6xl min-h-[800px] ml-12 mt-20 bg-[#061A3A] rounded-3xl px-10 py-12 text-white">
         <div className="relative sm:ml-30 mb-5">
-          <p 
+          <p
             ref={aboutLabelRef}
             className="about text-green-800 text-6xl italic absolute -top-8 left-35 z-10"
           >
             About
           </p>
-          <h1 
+          <h1
             ref={titleRef}
             className="tracking-[3px] mt-15 ml-30 text-4xl font-bold leading-snug"
           >
@@ -110,8 +130,7 @@ const About = () => {
           </h1>
         </div>
 
-        {/* Description */}
-        <p 
+        <p
           ref={descRef}
           className="description sm:ml-30 text-gray-100 text-[20px] text-base max-w-[400px] pl-30 -mt-3 mb-10"
         >
@@ -120,7 +139,6 @@ const About = () => {
           reefs around the globe.
         </p>
 
-        {/* Cards Grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           <div ref={addToRefs}>
             <Card
@@ -135,7 +153,7 @@ const About = () => {
               className="h-80"
             />
           </div>
-          
+
           <div ref={addToRefs}>
             <Card
               imageSrc={topright}
@@ -149,7 +167,7 @@ const About = () => {
               className="h-72"
             />
           </div>
-          
+
           <div ref={addToRefs}>
             <Card
               imageSrc={bottomleft}
@@ -163,7 +181,7 @@ const About = () => {
               className="h-64"
             />
           </div>
-          
+
           <div ref={addToRefs}>
             <Card
               imageSrc={bottomright}
